@@ -53,7 +53,7 @@ class Room_1():
 
     def falling_walls_generate(self):
         falling_walls = []
-        for i in range(22):
+        for i in range(20):
             falling_walls.append(wall.Wall((i * tile + 2 * tile, 2 * tile)))
             falling_walls.append(wall.Wall((i * tile + 2 * tile, 3 * tile)))
 
@@ -81,7 +81,7 @@ class Room_1():
             falling_walls.append(wall.Wall((i * tile + 2 * tile, 10 * tile)))
             falling_walls.append(wall.Wall((i * tile + 2 * tile, 11 * tile)))
 
-        for i in range(8):
+        for i in range(6):
             falling_walls.append(wall.Wall((i * tile + 16 * tile, 12 * tile)))
             falling_walls.append(wall.Wall((i * tile + 16 * tile, 13 * tile)))
 
@@ -104,13 +104,10 @@ class Room_1():
             pygame.draw.rect(self.screen, (0, 0, 0), wall.rect)
 
         for wall in self.falling_walls:
-            pygame.draw.rect(self.screen, (0, 0, 0), wall.rect)
+            pygame.draw.rect(self.screen, (0, 50, 150), wall.rect)
 
         for breakable_wall in self.breakable_walls:
             pygame.draw.rect(self.screen, (150, 50, 150), breakable_wall.rect)
-
-        for door in self.doors:
-            pygame.draw.rect(self.screen, (150, 0, 150), door.rect)
 
     def room_door(self):
 

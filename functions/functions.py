@@ -1,6 +1,7 @@
 from walls import wall
 from rooms import (room_99, room_1, room_2, room_0, room_3, room_4, room_5, room_6, room_7, room_8, room_9, room_10,
-                   room_11, room_12, room_13, room_14, room_24, room_15, room_16, room_17, room_23, room_25, room_26)
+                   room_11, room_12, room_13, room_14, room_24, room_15, room_16, room_17, room_23, room_25, room_26,
+                   room_18, room_19, room_20, room_21, room_22, room_27)
 
 tile = 16
 
@@ -48,7 +49,16 @@ def room_picker(room, door, screen, player):
             curr_room = room_16.Room(door, screen, player)
         case 17:
             curr_room = room_17.Room(door, screen, player)
-
+        case 18:
+            curr_room = room_18.Room(door, screen, player)
+        case 19:
+            curr_room = room_19.Room(door, screen, player)
+        case 20:
+            curr_room = room_20.Room(door, screen, player)
+        case 21:
+            curr_room = room_21.Room(door, screen, player)
+        case 22:
+            curr_room = room_22.Room(door, screen, player)
         case 23:
             curr_room = room_23.Room(door, screen, player)
         case 24:
@@ -57,6 +67,8 @@ def room_picker(room, door, screen, player):
             curr_room = room_25.Room(door, screen, player)
         case 26:
             curr_room = room_26.Room(door, screen, player)
+        case 27:
+            curr_room = room_27.Room(door, screen, player)
 
     player.set_room(curr_room)
 

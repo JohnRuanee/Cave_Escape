@@ -8,7 +8,10 @@ class Room_0():
     def __init__(self, door_num, screen, player):
         self.door = 0
 
-        self.player_spawn = [(4 * tile, 6 * tile), (21.6 * tile, 6 * tile)]
+        if door == 0:
+            self.player_spawn = [(4 * tile, 6 * tile)]
+        else:
+            self.player_spawn = [(21.6 * tile, 6 * tile)]
 
         self.generate(player)
 

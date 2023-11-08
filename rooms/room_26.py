@@ -21,7 +21,9 @@ class Room():
 
         self.falling_walls = self.falling_walls_generate()
 
-        self.doors = [door.Door((1 * tile, 6 * tile), 'left'), door.Door((16 * tile, 1 * tile), 'down'), door.Door((22 * tile, 6 * tile), 'left')]
+        self.doors = [door.Door((1 * tile, 6 * tile), 'left'),
+                      door.Door((16 * tile, 1 * tile), 'down'),
+                      door.Door((22 * tile, 6 * tile), 'left')]
 
         self.shooter = []
         self.buttons = []

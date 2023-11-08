@@ -13,15 +13,17 @@ class Room():
         self.screen = screen
 
         if self.door == 0:
-            self.player_spawn = [(15.4 * tile, 11.4 * tile)]
+            self.player_spawn = [(2.4 * tile, 3.4 * tile)]
         elif self.door == 1:
-            self.player_spawn = [(21.4 * tile, 7.4 * tile)]
-        else:
             self.player_spawn = [(2.4 * tile, 7.4 * tile)]
+        else:
+            self.player_spawn = [(2.4 * tile, 11.4 * tile)]
 
         self.falling_walls = self.falling_walls_generate()
 
-        self.doors = [door.Door((14 * tile, 13.8 * tile), 'down'), door.Door((22 * tile, 6 * tile), 'left'), door.Door((1 * tile, 6 * tile), 'left'), door.Door((10 * tile, 1 * tile), 'down')]
+        self.doors = [door.Door((1 * tile, 2 * tile),  'left'),
+                      door.Door((1 * tile, 6 * tile), 'left'),
+                      door.Door((1 * tile, 10 * tile), 'left')]
 
         self.shooter = []
         self.buttons = []
@@ -29,10 +31,9 @@ class Room():
         self.entity_walls = []
 
         self.walls = functions.make_walls(self.doors)
-        for i in range(5):
-            self.walls.append(wall.Wall(((10 + i) * tile, 1 * tile)))
-            self.walls.append(wall.Wall(((9 + i) * tile, 14 * tile)))
-            # self.walls.append(wall.Wall(((22) * tile, (6 + i) * tile)))
+        for i in range(12):
+            # self.walls.append(wall.Wall(((4 + i) * tile, 14 * tile)))
+            self.walls.append(wall.Wall(((22) * tile, (2 + i) * tile)))
 
         self.entities = []
 
@@ -40,9 +41,9 @@ class Room():
 
         self.button_bool = True
 
-        self.room = 17
+        self.room = 22
 
-        self.adjacent_rooms = [16,18, 23]
+        self.adjacent_rooms = [210,211,212]
 
     def update(self):
         key_event = pygame.key.get_pressed()
@@ -71,36 +72,8 @@ class Room():
         for wall in self.falling_walls:
             self.entity_walls.append(wall)
 
-        self.buttons.append(button.Button((7.4 * tile, 3 * tile), True, self.screen))
-
-        self.entities.append(bug.Bug((7.4 * tile, 5 * tile), self.screen))
-
-
-        self.shooter.append(stationary_shooter.Stationary_Shooter((18 * tile, 5 * tile), 'down', 32, self.screen))
-        self.shooter.append(stationary_shooter.Stationary_Shooter((18 * tile, 10 * tile), 'up', 32, self.screen))
-
-        # for shooter in self.shooter:
-        #     self.entities.append(shooter)
-
-
     def falling_walls_generate(self):
         falling_walls = []
-
-        for x in range(4):
-            for y in range(4):
-                falling_walls.append(wall.Wall(((x + 2) * tile, (y + 2) * tile)))
-
-        for x in range(12):
-            for y in range(4):
-                falling_walls.append(wall.Wall(((x + 10) * tile, (y + 2) * tile)))
-
-        for x in range(4):
-            for y in range(4):
-                falling_walls.append(wall.Wall(((x + 18) * tile, (y + 10) * tile)))
-
-        for x in range(12):
-            for y in range(4):
-                falling_walls.append(wall.Wall(((x + 2) * tile, (y + 10) * tile)))
 
         return falling_walls
 
@@ -135,14 +108,15 @@ class Room():
         self.door = 0
 
         match self.room:
-            case 16:
+            case 210:
                 self.door = 1
-            case 18:
-                self.door = 0
-            case 23:
-                self.door = 0
-
-
+                self.room = 21
+            case 211:
+                self.door = 2
+                self.room = 21
+            case 212:
+                self.door = 3
+                self.room = 21
 
     def reset(self):
         del self.entities

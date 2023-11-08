@@ -33,7 +33,7 @@ pygame.display.set_caption("Cave escape")
 clock = pygame.time.Clock()
 
 # current room and door
-room = 26
+room = 0
 door = 0
 
 # game loop boolean
@@ -42,7 +42,7 @@ new_room = False
 
 player = player.Player((0, 0))
 
-player.can_attack = True
+player.can_attack = False
 
 curr_room = functions.room_picker(room, door, screen, player)
 

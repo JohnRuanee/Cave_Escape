@@ -15,7 +15,7 @@ class Room():
         if self.door == 0:
             self.player_spawn = [(2.4 * tile, 7.4 * tile)]
         elif self.door == 2:
-            self.player_spawn = [(11.4 * tile, 11.4 * tile)]
+            self.player_spawn = [(11.4 * tile, 12.4 * tile)]
         else:
             self.player_spawn = [(17.4 * tile, 2.4 * tile)]
 
