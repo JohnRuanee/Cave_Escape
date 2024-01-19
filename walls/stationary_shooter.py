@@ -31,6 +31,16 @@ class Stationary_Shooter(pygame.sprite.Sprite):
         self.rect.topleft = position
 
 
+        match direction:
+            case 'down':
+                self.sheet = pygame.image.load("walls/sprites/stationary_shooter_sheet_1.png")
+            case 'up':
+                self.sheet = pygame.image.load("walls/sprites/stationary_shooter_sheet_3.png")
+            case 'right':
+                self.sheet = pygame.image.load("walls/sprites/stationary_shooter_sheet_2.png")
+            case 'left':
+                self.sheet = pygame.transform.flip(pygame.image.load("walls/sprites/stationary_shooter_sheet_2.png"), True, False)
+
 
 
     def update(self, player, walls, attack_on):
@@ -41,7 +51,7 @@ class Stationary_Shooter(pygame.sprite.Sprite):
             self.attack_timer = 0
             self.bullet_rect.x = 10000
 
-
+        self.screen.blit(self.sheet, (self.rect.x, self.rect.y))
 
     def attack_update(self, player, walls):
         if self.attack_timer > 0:
@@ -58,7 +68,7 @@ class Stationary_Shooter(pygame.sprite.Sprite):
         else:
             self.attack = False
 
-        pygame.draw.rect(self.screen, (255, 0, 0), self.bullet_rect)
+        pygame.draw.rect(self.screen, (200, 200, 200), self.bullet_rect)
 
         bullet_hit = pygame.Rect.colliderect(self.bullet_rect, player.rect)
         if bullet_hit:

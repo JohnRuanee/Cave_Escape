@@ -43,7 +43,7 @@ class Room():
 
     def update(self):
         key_event = pygame.key.get_pressed()
-        self.draw_hitbox()
+        self.draw()
 
         for shooter in self.shooter:
             shooter.update(self.player, self.walls, not self.buttons[0].is_on)
@@ -106,24 +106,9 @@ class Room():
 
         return falling_walls
 
-    def draw_hitbox(self):
-        self.screen.fill((255,255,255))
-
-        pygame.draw.rect(self.screen, (0, 0, 255), self.player.rect)
-
-        for wall in self.walls:
-            pygame.draw.rect(self.screen, (0, 0, 0), wall.rect)
-
-        for wall in self.falling_walls:
-            pygame.draw.rect(self.screen, (0, 50, 150), wall.rect)
-
-        for button in self.buttons:
-            pygame.draw.rect(self.screen, (255, 0, 0), button.rect)
-
-        for entity in self.entities:
-            pygame.draw.rect(self.screen, (50, 50, 50), entity.rect)
-
-
+    def draw(self):
+        image = pygame.image.load('map/images/Room_' + str(self.room) + '.png')
+        pygame.Surface.blit(self.screen, image, (0, 0))
 
     def room_door(self):
 

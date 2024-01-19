@@ -1,7 +1,8 @@
 from walls import wall
 from rooms import (room_99, room_1, room_2, room_0, room_3, room_4, room_5, room_6, room_7, room_8, room_9, room_10,
-                   room_11, room_12, room_13, room_14, room_24, room_15, room_16, room_17, room_23, room_25, room_26,
-                   room_18, room_19, room_20, room_21, room_22, room_27)
+                   room_11, room_12, room_13, room_14, room_24, room_15, room_16, room_23, room_25, room_26,
+                   room_18, room_19, room_20, room_21, room_22, room_27, room_17, room_28)
+import pygame
 
 tile = 16
 
@@ -69,6 +70,11 @@ def room_picker(room, door, screen, player):
             curr_room = room_26.Room(door, screen, player)
         case 27:
             curr_room = room_27.Room(door, screen, player)
+        case 28:
+            curr_room = room_28.Room(door, screen, player)
+
+    if curr_room != room:
+        player.health = 3
 
     player.set_room(curr_room)
 
@@ -124,3 +130,29 @@ def check_door(x, y, doors):
             if ((x - door.rect.x <= 4 * tile and x >= door.rect.x) and abs(door.rect.y - y <= tile)):
                 can_wall = False
     return can_wall
+
+def draw_hitbox(room):
+    # room.screen.fill((250, 250, 250))
+    for i in range(0):
+        print()
+    #pygame.draw.rect(room.screen, (0, 0, 255), room.player.rect)
+
+    # for wall in room.walls:
+    #     pygame.draw.rect(room.screen, (0, 0, 0), wall.rect)
+    #
+    # for wall in room.falling_walls:
+    #     pygame.draw.rect(room.screen, (0, 50, 150), wall.rect)
+
+    # for button in room.buttons:
+    #     pygame.draw.rect(room.screen, (255, 0, 0), button.rect)
+
+    # for entity in room.entities:
+    #     pygame.draw.rect(room.screen, (50, 50, 50), entity.rect)
+
+    # for shooter in room.shooter:
+    #     pygame.draw.rect(room.screen, (255, 0,0), shooter.rect)
+
+def draw_sprites(room):
+    breakable_wall = pygame.image.load('entities/sprites/breakable_wall.png')
+    for wall in room.breakable_walls:
+        pygame.Surface.blit(room.screen, breakable_wall, (wall.rect.x, wall.rect.y))

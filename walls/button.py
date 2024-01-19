@@ -15,11 +15,21 @@ class Button(pygame.sprite.Sprite):
         self.curr_hit = False
         self.is_on = False
 
+        self.image1 = pygame.image.load("entities/sprites/button1.png")
+        self.image2 = pygame.image.load("entities/sprites/button2.png")
+
         self.rect.topleft = position
         pygame.sprite.Group()
 
     def update(self, player):
         self.collision_update(player)
+
+        if self.is_on:
+            self.image = self.image2
+        else:
+            self.image = self.image1
+
+        self.screen.blit(self.image, (self.rect.x - 4, self.rect.y))
 
     def collision_update(self, player):
 

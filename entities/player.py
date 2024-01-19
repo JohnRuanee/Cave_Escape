@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.hit = False
         self.hit_timer = 0
         self.movable = True
+        self.moving = False
 
         self.rect.topleft = position
 
@@ -31,47 +32,224 @@ class Player(pygame.sprite.Sprite):
 
         self.falling_rect = falling_rect.Falling_Rect(self.rect)
 
+        # load image
+        self.slash_sheet = pygame.image.load("entities/sprites/slash.png")
+
+        # defines area of a single sprite of an image
+        self.slash_sheet.set_clip(pygame.Rect(0, 0, 38, 38))
+
+        # loads spritesheet images
+        self.slash_image = self.slash_sheet.subsurface(self.slash_sheet.get_clip())
+
+        self.heart_full = pygame.image.load("entities/sprites/Red 16.png")
+        self.heart_empty = pygame.image.load("entities/sprites/16.png")
+
+        self.frame_slash = 0
+        self.frame = 0
+
+        self.slash_states = {0: (35, 0 * tile, 35, 2 * tile),
+                             3: (70, 0 * tile, 35, 2 * tile),
+                             1: (0 * tile, 2 * tile, 35, 2 * tile),
+                             2: (35, 2 * tile, 35, 2 * tile)}
+
+        self.progressed = False
+
+        # load image
+        self.sheet = pygame.image.load("entities/sprites/player_sprite.png")
+
+        # defines area of a single sprite of an image
+        self.sheet.set_clip(pygame.Rect(0, 0, 2 * tile, 2 * tile))
+
+        # loads spritesheet images
+        self.image = self.sheet.subsurface(self.sheet.get_clip())
+
+        self.frame = 0
+
+        self.down_states = {0: (0 * tile, 0 * tile, 2 * tile, 2 * tile),
+                            1: (2 * tile, 0 * tile, 2 * tile, 2 * tile),
+                            2: (4 * tile, 0 * tile, 2 * tile, 2 * tile),
+                            3: (6 * tile, 0 * tile, 2 * tile, 2 * tile)}
+
+        self.right_states = {0: (0 * tile, 2 * tile, 2 * tile, 2 * tile),
+                             1: (2 * tile, 2 * tile, 2 * tile, 2 * tile),
+                             2: (4 * tile, 2 * tile, 2 * tile, 2 * tile),
+                             3: (6 * tile, 2 * tile, 2 * tile, 2 * tile)}
+
+        self.up_states = {0: (0 * tile, 4 * tile, 2 * tile, 2 * tile),
+                          1: (2 * tile, 4 * tile, 2 * tile, 2 * tile),
+                          2: (4 * tile, 4 * tile, 2 * tile, 2 * tile),
+                          3: (6 * tile, 4 * tile, 2 * tile, 2 * tile)}
+
+        self.left_states = {0: (0 * tile, 6 * tile, 2 * tile, 2 * tile),
+                            1: (2 * tile, 6 * tile, 2 * tile, 2 * tile),
+                            2: (4 * tile, 6 * tile, 2 * tile, 2 * tile),
+                            3: (6 * tile, 6 * tile, 2 * tile, 2 * tile)}
+
 
 
     def update(self, key, screen, entities, walls, falling_walls, doors):
+        self.screen = screen
         self.movement_update(key, walls)
         if self.can_attack:
             self.attack_update(key, screen)
         self.collision_update(entities, walls, falling_walls, doors)
         self.buffer_update()
+        self.animation_update(self.facing)
+
+        if self.health == 3:
+            screen.blit(self.heart_full, (0,0))
+            screen.blit(self.heart_full, (0, 1 * tile))
+            screen.blit(self.heart_full, (0, 2 * tile))
+        elif self.health == 2:
+            screen.blit(self.heart_full, (0,0))
+            screen.blit(self.heart_full, (0, 1 * tile))
+            screen.blit(self.heart_empty, (0, 2 * tile))
+        elif self.health == 1:
+            screen.blit(self.heart_full, (0, 0))
+            screen.blit(self.heart_empty, (0, 1 * tile))
+            screen.blit(self.heart_empty, (0, 2 * tile))
+        else:
+            screen.blit(self.heart_empty, (0, 0))
+            screen.blit(self.heart_empty, (0, 1 * tile))
+            screen.blit(self.heart_empty, (0, 2 * tile))
+
+    def get_frame_slash(self, frame_set):
+        # looping the sprite sequences.
+        if not self.progressed:
+            self.frame_slash += 1
+            self.progressed = True
+        else:
+            self.progressed = False
+        # self.frame += 1
+
+        # if loop index is higher that the size of the frame return to the first frame
+        if self.frame_slash > 3:
+            self.frame_slash = 0
+        # print(frame_set[self.frame])
+        return frame_set[self.frame_slash]
+
+    def clip_slash(self, clipped_rect):
+        if type(clipped_rect) is dict:
+            self.slash_sheet.set_clip(pygame.Rect(self.get_frame_slash(clipped_rect)))
+        else:
+            self.slash_sheet.set_clip(pygame.Rect(clipped_rect))
+        return clipped_rect
+
+    def get_frame(self, frame_set):
+        # looping the sprite sequences.
+        if not self.progressed:
+            self.frame += 1
+            self.progressed = True
+        else:
+            self.progressed = False
+
+        # if loop index is higher that the size of the frame return to the first frame
+        if self.frame > (len(frame_set) - 1):
+            self.frame = 1
+        # print(frame_set[self.frame])
+
+        if not self.moving:
+            self.frame = 0
+
+        return frame_set[self.frame]
+
+    def clip(self, clipped_rect):
+        if type(clipped_rect) is dict:
+            self.sheet.set_clip(pygame.Rect(self.get_frame(clipped_rect)))
+        else:
+            self.sheet.set_clip(pygame.Rect(clipped_rect))
+        return clipped_rect
+
+    def animation_update(self, direction):
+        if direction == 'left':
+            self.clip(self.left_states)
+
+        if direction == 'right':
+            self.clip(self.right_states)
+
+        if direction == 'up':
+            self.clip(self.up_states)
+
+        if direction == 'down':
+            self.clip(self.down_states)
+
+
+        self.image = self.sheet.subsurface(self.sheet.get_clip())
+
+        self.screen.blit(self.image, (self.rect.x - 8, self.rect.y - 8))
+
+    def animation_update_slash(self, direction):
+        if direction == 'left':
+            self.clip_slash(self.slash_states)
+            self.slash_image = self.slash_sheet.subsurface(self.slash_sheet.get_clip())
+            self.screen.blit(pygame.transform.rotate(self.slash_image, 90), (self.attack_rect.x - 0, self.attack_rect.y - 8))
+
+
+        if direction == 'right':
+            self.clip_slash(self.slash_states)
+            self.slash_image = self.slash_sheet.subsurface(self.slash_sheet.get_clip())
+            self.screen.blit(pygame.transform.rotate(self.slash_image, 270), (self.attack_rect.x - 16, self.attack_rect.y - 8))
+
+        if direction == 'up':
+            self.clip_slash(self.slash_states)
+            self.slash_image = self.slash_sheet.subsurface(self.slash_sheet.get_clip())
+            self.screen.blit(pygame.transform.rotate(self.slash_image, 0), (self.attack_rect.x - 8, self.attack_rect.y - 0))
+
+        if direction == 'down':
+            self.clip_slash(self.slash_states)
+            self.slash_image = self.slash_sheet.subsurface(self.slash_sheet.get_clip())
+            self.screen.blit(pygame.transform.rotate(self.slash_image, 180), (self.attack_rect.x - 8, self.attack_rect.y - 16))
+
+        # self.clip(self.slash_states)
 
 
 
     def movement_update(self, key, walls):
+        move = False
         if self.movable:
             if (key[pygame.K_LEFT]):
                 self.facing = 'left'
+                # self.animation_update(self.facing)
+                move = True
 
                 if not self.buffer_collision(walls):
                     self.rect.x -= 5
 
             if (key[pygame.K_RIGHT]):
                 self.facing = 'right'
+                # self.animation_update(self.facing)
+                move = True
 
                 if not self.buffer_collision(walls):
                     self.rect.x += 5
 
             if (key[pygame.K_UP]):
                 self.facing = 'up'
+                # self.animation_update(self.facing)
+                move = True
 
                 if not self.buffer_collision(walls):
                     self.rect.y -= 5
 
             if (key[pygame.K_DOWN]):
                 self.facing = 'down'
+                # self.animation_update(self.facing)
+                move = True
 
                 if not self.buffer_collision(walls):
                     self.rect.y += 5
 
+            if move:
+                self.moving = True
+            else:
+                self.moving = False
+
+
+
     def attack_update(self, key, screen):
         if (key[pygame.K_x] and self.attack == False):
             self.attack = True
-            self.attack_timer = 10
+            self.attack_timer = 6
 
         if (self.attack == True):
             self.attack_timer -= 1
@@ -86,7 +264,8 @@ class Player(pygame.sprite.Sprite):
                 case 'down':
                     self.attack_rect = pygame.Rect(self.rect.x, self.rect.y + tile, tile, tile)
 
-            pygame.draw.rect(screen, (255, 0, 0), self.attack_rect)
+            # pygame.draw.rect(screen, (255, 0, 0), self.attack_rect)
+            self.animation_update_slash(self.facing)
 
             if self.attack_timer <= 0:
                 self.attack_rect.x = -20

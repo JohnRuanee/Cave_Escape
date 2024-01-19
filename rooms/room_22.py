@@ -16,14 +16,16 @@ class Room():
             self.player_spawn = [(2.4 * tile, 3.4 * tile)]
         elif self.door == 1:
             self.player_spawn = [(2.4 * tile, 7.4 * tile)]
-        else:
+        elif self.door == 2:
             self.player_spawn = [(2.4 * tile, 11.4 * tile)]
+
 
         self.falling_walls = self.falling_walls_generate()
 
         self.doors = [door.Door((1 * tile, 2 * tile),  'left'),
                       door.Door((1 * tile, 6 * tile), 'left'),
-                      door.Door((1 * tile, 10 * tile), 'left')]
+                      door.Door((1 * tile, 10 * tile), 'left'),
+                      door.Door((10 * tile, 1 * tile), 'up')]
 
         self.shooter = []
         self.buttons = []
@@ -43,11 +45,12 @@ class Room():
 
         self.room = 22
 
-        self.adjacent_rooms = [210,211,212]
+        self.adjacent_rooms = [210,211,212, 28]
 
     def update(self):
+        self.draw()
+
         key_event = pygame.key.get_pressed()
-        self.draw_hitbox()
 
         for shooter in self.shooter:
             shooter.update(self.player, self.walls, not self.buttons[0].is_on)
@@ -62,6 +65,9 @@ class Room():
 
         return self.room, self.door, self.screen
 
+    def draw(self):
+        image = pygame.image.load('map/images/Room_' + str(self.room) + '.png')
+        pygame.Surface.blit(self.screen, image, (0, 0))
 
     def generate(self, player):
         self.player = player
@@ -76,28 +82,6 @@ class Room():
         falling_walls = []
 
         return falling_walls
-
-    def draw_hitbox(self):
-        self.screen.fill((255,255,255))
-
-        pygame.draw.rect(self.screen, (0, 0, 255), self.player.rect)
-
-        for wall in self.walls:
-            pygame.draw.rect(self.screen, (0, 0, 0), wall.rect)
-
-        for wall in self.falling_walls:
-            pygame.draw.rect(self.screen, (0, 50, 150), wall.rect)
-
-        for button in self.buttons:
-            pygame.draw.rect(self.screen, (255, 0, 0), button.rect)
-
-        for entity in self.entities:
-            pygame.draw.rect(self.screen, (50, 50, 50), entity.rect)
-
-        for shooter in self.shooter:
-            pygame.draw.rect(self.screen, (255, 0,0), shooter.rect)
-
-
 
     def room_door(self):
 
@@ -117,6 +101,8 @@ class Room():
             case 212:
                 self.door = 3
                 self.room = 21
+            case 28:
+                self.room = 28
 
     def reset(self):
         del self.entities

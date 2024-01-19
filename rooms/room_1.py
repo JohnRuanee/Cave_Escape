@@ -19,6 +19,9 @@ class Room_1():
         self.breakable_walls = []
 
         self.generate(player)
+        self.buttons = []
+        self.entities = []
+        self.shooter = []
 
         self.walls = functions.make_walls(self.doors)
         for i in range(4):
@@ -31,15 +34,21 @@ class Room_1():
         self.adjacent_rooms = [0,2,11]
 
     def update(self):
+        self.draw()
         key_event = pygame.key.get_pressed()
-        self.draw_hitbox()
 
         for wall in self.breakable_walls:
             wall.update(self.player)
 
         self.player.update(key_event, self.screen, [], self.walls, self.falling_walls, self.doors)
 
+
+
         return self.room, self.door, self.screen
+
+    def draw(self):
+        image = pygame.image.load('map/images/Room_1.png')
+        pygame.Surface.blit(self.screen, image, (0,0))
 
 
     def generate(self, player):
@@ -95,19 +104,7 @@ class Room_1():
 
         return falling_walls
 
-    def draw_hitbox(self):
-        self.screen.fill((255,255,255))
 
-        pygame.draw.rect(self.screen, (0, 0, 255), self.player.rect)
-
-        for wall in self.walls:
-            pygame.draw.rect(self.screen, (0, 0, 0), wall.rect)
-
-        for wall in self.falling_walls:
-            pygame.draw.rect(self.screen, (0, 50, 150), wall.rect)
-
-        for breakable_wall in self.breakable_walls:
-            pygame.draw.rect(self.screen, (150, 50, 150), breakable_wall.rect)
 
     def room_door(self):
 

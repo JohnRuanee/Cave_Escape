@@ -63,6 +63,20 @@ while not game_over:
         player.health = 3
 
     curr_room.update()
+
+    screen_rect = pygame.rect.Rect(0,0,screen_width,screen_height)
+
+    functions.draw_hitbox(curr_room)
+    functions.draw_sprites(curr_room)
+
+    if room == 0 and player.can_attack:
+        pygame.font.init()
+        my_font = pygame.font.SysFont(None, 30)
+
+        text_surface = my_font.render('Created By: John Ruane', False, (250,250,250))
+
+        screen.blit(text_surface, (32,0))
+
     draw()
 
     pygame.display.flip()
